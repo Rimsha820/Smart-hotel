@@ -1,7 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { MdOutlineBed } from "react-icons/md";
+import { HiOutlineLogout } from "react-icons/hi"; 
 import logo from "../assets/logo.png";
 import { useRoomBooking } from "../Store/RoombookingContext";
 
@@ -14,6 +15,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const { bookedRoom, setBookedRoom } = useRoomBooking();
+  const navigate = useNavigate(); 
 
   const linkClass = ({ isActive }: LinkClassProps) =>
     isActive
@@ -22,6 +24,11 @@ function Header() {
 
   const toggleDetails = () => {
     if (bookedRoom) setDetailsOpen(!detailsOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user"); 
+    navigate("/login"); 
   };
 
   return (
@@ -62,6 +69,15 @@ function Header() {
           <NavLink to="/contact" className={linkClass}>
             Contact
           </NavLink>
+
+          {/* Logout Button */}
+          <button
+            className="text-2xl text-black hover:text-red-600"
+            onClick={handleLogout}
+            aria-label="Logout"
+          >
+            <HiOutlineLogout />
+          </button>
         </nav>
       </div>
 
@@ -167,6 +183,18 @@ function Header() {
             >
               Contact
             </NavLink>
+
+            {/* Mobile logout button */}
+            <button
+              className="text-2xl text-black hover:text-red-600"
+              onClick={() => {
+                handleLogout();
+                setMenuOpen(false); // Close the menu after logout
+              }}
+              aria-label="Logout"
+            >
+              <HiOutlineLogout />
+            </button>
           </nav>
         </div>
       )}
